@@ -2,6 +2,7 @@ import logo from './logo.svg';
 import './App.css';
 import React, { useState } from 'react';
 import { generate } from './Components/words';
+import { currentTime } from './Components/time';
 import useKeyPress from './Components/useKeyPress';
 
 const initialWords = generate();
@@ -13,10 +14,18 @@ function App() {
   const [outgoingChars, setOutgoingChars] = useState('');
   const [currentChar, setCurrentChar] = useState(initialWords.charAt(0));
   const [incomingChars, setIncomingChars] = useState(initialWords.substr(1));
+  const [startTime, setStartTime] = useState();
+  const [wordCount, setWordCount] = useState(0);
+  const [wpm, setWpm] = useState(0);
 
   useKeyPress(key => {
+    if (!startTime) {
+      setStartTime(currentTime());
+    }
+
     let updatedOutgoingChars = outgoingChars;
     let updatedIncomingChars = incomingChars;
+
     if (key === currentChar) {
       if (leftPadding.length > 0) {
         setLeftPadding(leftPadding.substring(1));
@@ -31,8 +40,14 @@ function App() {
         updatedIncomingChars += ' '+ generate();
       }
       setIncomingChars(updatedIncomingChars);
+
+      if (incomingChars.charAt(0) === ' ') {
+        setWordCount(wordCount + 1);
+        const durationInMinutes = (currentTime() - startTime) / 60000.0;
+        setWpm(((wordCount + 1) / durationInMinutes).toFixed(0));
+      }
     }
-  })
+  });
 
   return (
     <div className="App">
@@ -45,6 +60,9 @@ function App() {
           <span className="Character-current">{currentChar}</span>
           <span>{incomingChars.substr(0, 20)}</span>
         </p>
+        <h3>
+          WPM: {wpm}
+        </h3>
         <a
           className="App-link"
           href="https://reactjs.org"
