@@ -52,7 +52,6 @@ function App() {
   return (
     <div className="App">
       <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
         <p className="Character">
           <span className="Character-out">
             {(leftPadding + outgoingChars).slice(-20)}
@@ -63,14 +62,6 @@ function App() {
         <h3>
           WPM: {wpm}
         </h3>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
       </header>
     </div>
   );
